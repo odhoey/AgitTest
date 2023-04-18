@@ -249,7 +249,7 @@
                 formData.append("start", $("#startDate").val());
                 formData.append("end", $("#endDate").val());
                 $.ajax({
-                    url: "@Url.Action("ShipCity", "Home")",
+                    url: "@Url.Action("ShipReport", "Home")",
                     type: "POST",
                     cache: false,
                     data: formData,
