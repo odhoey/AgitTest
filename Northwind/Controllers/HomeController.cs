@@ -125,7 +125,17 @@ namespace Northwind.Controllers
                 DateTime startDate = DateTime.ParseExact(start, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
                 DateTime endDate = DateTime.ParseExact(end, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
                 List<ProductTransaction> dataOrder = new List<ProductTransaction>();
-                var raw = northwind.Orders;
+                var raw = northwind.Order_Details;
+                raw.Expand("Order");
+                raw.Expand("Product");
+                raw.Expand("Product.Category");
+                raw.Where(w => w.Order.OrderDate >= startDate && w.Order.OrderDate <= endDate).Select(s => new
+                {
+                    CategoryID = s.Product.CategoryID,
+                    CategoryName = s.Product.Category.CategoryName,
+                    Quantity = s.Quantity,
+                    Price = s.UnitPrice
+                }).ToList();
                 
                 var data = dataOrder.AsParallel().GroupBy(g => g.CategoryID).Select(s => new
                 {
